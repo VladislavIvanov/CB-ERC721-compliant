@@ -1,5 +1,5 @@
-var BuildingFactory = artifacts.require("./BuildingFactory.sol");
+var BuildingOwnership = artifacts.require("./BuildingOwnership.sol");
 
 module.exports = function(deployer) {
-  deployer.deploy(BuildingFactory);
+  deployer.deploy(BuildingOwnership);
 };

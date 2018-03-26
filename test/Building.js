@@ -19,56 +19,6 @@ contract('BuildingOwnership', function (accounts) {
 	const buildingName = "Tetrix";
     const buildingAddress = "Sofia, Dragan Tsankov";
 
-    describe("building listing", () => {
-
-		beforeEach(async function () {
-			buildingContract = await BuildingOwnership.new();
-		});
-
-		it("should create new building listing", async function () {
-            const expectedEvent = 'NewBuilding';
-
-			let result = await buildingContract.listBuilding(
-                buildingName,
-                buildingAddress, {from: _owner}
-            );
-        
-            let buildingsByOwner = await buildingContract.getBuildingsByOwner(_owner);
-
-            assert.strictEqual(buildingsByOwner.toString(10), "0", "There should be 1 listed building with buildingId 0");
-            assert.lengthOf(result.logs, 1, "There should be 1 event emitted from creating new building listings!");
-            assert.strictEqual(result.logs[0].event, expectedEvent, `The event emitted was ${result.logs[0].event} instead of ${expectedEvent}`);
-        });
-
-        it("should get all buildings owned by address", async function () {
-			let firstListing = await buildingContract.listBuilding(
-                buildingName,
-                buildingAddress, {from: _owner}
-            );
-
-            let secondListing = await buildingContract.listBuilding(
-                buildingName,
-                buildingAddress, {from: _owner}
-            );
-
-            let thirdListing = await buildingContract.listBuilding(
-                buildingName,
-                buildingAddress, {from: _owner}
-            );
-        
-            let buildingsByOwner = await buildingContract.getBuildingsByOwner(_owner);
-
-            assert.strictEqual(buildingsByOwner.toString(10), "0,1,2", "There should be 3 listed buildings with buildingId 0, 1 and 2");
-        });
-        
-        it("should throw if non-owner tries to list building", async function() {
-            await expectThrow(buildingContract.listBuilding(
-                buildingName,
-                buildingAddress, {from: _notOwner}
-            ));
-        });
-    });
-    
     describe("building ownership", () => {
 
 		beforeEach(async function () {
@@ -145,4 +95,55 @@ contract('BuildingOwnership', function (accounts) {
         });
         
 	});
+    
+    describe("building listing", () => {
+
+		beforeEach(async function () {
+			buildingContract = await BuildingOwnership.new();
+		});
+
+		it("should create new building listing", async function () {
+            const expectedEvent = 'NewBuilding';
+
+			let result = await buildingContract.listBuilding(
+                buildingName,
+                buildingAddress, {from: _owner}
+            );
+        
+            let buildingsByOwner = await buildingContract.getBuildingsByOwner(_owner);
+
+            assert.strictEqual(buildingsByOwner.toString(10), "0", "There should be 1 listed building with buildingId 0");
+            assert.lengthOf(result.logs, 1, "There should be 1 event emitted from creating new building listings!");
+            assert.strictEqual(result.logs[0].event, expectedEvent, `The event emitted was ${result.logs[0].event} instead of ${expectedEvent}`);
+        });
+
+        it("should get all buildings owned by address", async function () {
+			let firstListing = await buildingContract.listBuilding(
+                buildingName,
+                buildingAddress, {from: _owner}
+            );
+
+            let secondListing = await buildingContract.listBuilding(
+                buildingName,
+                buildingAddress, {from: _owner}
+            );
+
+            let thirdListing = await buildingContract.listBuilding(
+                buildingName,
+                buildingAddress, {from: _owner}
+            );
+        
+            let buildingsByOwner = await buildingContract.getBuildingsByOwner(_owner);
+
+            assert.strictEqual(buildingsByOwner.toString(10), "0,1,2", "There should be 3 listed buildings with buildingId 0, 1 and 2");
+        });
+        
+        it("should throw if non-owner tries to list building", async function() {
+            await expectThrow(buildingContract.listBuilding(
+                buildingName,
+                buildingAddress, {from: _notOwner}
+            ));
+        });
+    });
+
 })
